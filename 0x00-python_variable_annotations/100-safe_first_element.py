@@ -9,6 +9,7 @@ from typing import Any, Sequence, Union
 
 
 def safe_first_element(lst: Sequence[Any]) -> Union[str, None]:
+    """Accepts a sequence and returns either the first item or None"""
     if lst:
         return lst[0]
     else:
