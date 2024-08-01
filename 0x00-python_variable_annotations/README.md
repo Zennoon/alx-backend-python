@@ -1,0 +1,1 @@
+This directory was created on August 1, 2024 for the ALX backend track project about python type annotations.
