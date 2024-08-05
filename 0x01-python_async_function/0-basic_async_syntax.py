@@ -4,7 +4,7 @@ Contains:
     Functions
     =========
     wait_random - an async coroutine that accepts an integer
-    and waits/sleeps for a random time between 0 and given integer 
+    and waits/sleeps for a random time between 0 and given integer
 """
 import asyncio
 import random
