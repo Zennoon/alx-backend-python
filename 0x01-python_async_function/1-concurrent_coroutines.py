@@ -17,4 +17,5 @@ async def wait_n(n: int, max_delay: int) -> List[float]:
     """
     Calls another coroutines n times passing the given max_delay value
     """
-    return (await asyncio.gather(*(wait_random(max_delay) for _ in range(n))))
+    return [await res for res in asyncio.as_completed([wait_random(max_delay)
+                                                       for _ in range(n)])]
