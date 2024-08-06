@@ -17,5 +17,5 @@ async def async_generator() -> AsyncGenerator[float, None]:
     and each time sleeps for 1 second
     """
     for i in range(10):
-        await asyncio.sleep(1)
+        await asyncio.wait([asyncio.sleep(1)])
         yield random.uniform(0, 10)
