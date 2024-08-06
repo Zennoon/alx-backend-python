@@ -8,14 +8,14 @@ Contains:
 """
 import asyncio
 import random
-from typing import AsyncGenerator
+from typing import Generator
 
 
-async def async_generator() -> AsyncGenerator[float, None]:
+async def async_generator() -> Generator[float, None, None]:
     """
     Generates/yields a random value between 1 and 10 ten times
     and each time sleeps for 1 second
     """
     for i in range(10):
-        await asyncio.wait([asyncio.sleep(1)])
+        await asyncio.sleep(1)
         yield random.uniform(0, 10)
