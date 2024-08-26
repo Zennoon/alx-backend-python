@@ -5,7 +5,8 @@ Contains:
 """
 import unittest
 from parameterized import parameterized
-from unittest.mock import patch, PropertyMock
+from unittest.mock import patch
+from unittest.mock import PropertyMock as PM
 
 from client import GithubOrgClient
 
@@ -28,8 +29,7 @@ class TestGithubOrgClient(unittest.TestCase):
 
     def test_public_repos_url(self):
         """Tests the _public_repos_url property of the class"""
-        with patch.object(GithubOrgClient, "org", new_callable=PropertyMock) as mock_org:
+        with patch.object(GithubOrgClient, "org", new_callable=PM) as mock_org:
             mock_org.return_value = {"repos_url": None}
             client = GithubOrgClient("google")
             self.assertEqual(client._public_repos_url, None)
-
