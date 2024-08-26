@@ -23,3 +23,14 @@ class TestAccessNestedMap(unittest.TestCase):
         """First test for access_nested_map function"""
         self.assertEqual(access_nested_map(nested_map, path), expected)
 
+    @parameterized.expand([
+        ({}, ("a",), 0),
+        ({"a": 1}, ("a", "b"), 1)
+    ])
+    def test_access_nested_map_exception(self, nested_map, path, idx):
+        """Tests that invalid arguments cause the function to raise an exception"""
+        with self.assertRaises(KeyError, msg=path) as cm:
+            access_nested_map(nested_map, path)
+        self.assertEqual(str(cm.exception).strip("'"), path[idx])
+
+
