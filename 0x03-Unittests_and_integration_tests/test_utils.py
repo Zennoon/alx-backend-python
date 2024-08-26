@@ -7,9 +7,10 @@ Contains:
     util function
 """
 import unittest
+import unittest.mock
 from parameterized import parameterized
 
-from utils import access_nested_map
+from utils import access_nested_map, get_json
 
 
 class TestAccessNestedMap(unittest.TestCase):
@@ -34,3 +35,16 @@ class TestAccessNestedMap(unittest.TestCase):
         self.assertEqual(str(cm.exception).strip("'"), path[idx])
 
 
+class TestGetJson(unittest.TestCase):
+    """Testcases for the get_json util function"""
+    @parameterized.expand([
+        ("http://example.com", {"payload": True}),
+        ("http://holberton.io", {"payload": False})
+    ])
+    def test_get_json(self, test_url, test_payload):
+        with unittest.mock.patch("utils.requests") as requests_mock:
+            get_return = unittest.mock.Mock()
+            get_return.json.return_value = test_payload
+            requests_mock.get.return_value = get_return
+            self.assertEqual(get_json(test_url), test_payload)
+            requests_mock.get.assert_called_once_with(test_url)
