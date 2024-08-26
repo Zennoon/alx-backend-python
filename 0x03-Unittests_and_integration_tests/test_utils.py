@@ -50,6 +50,9 @@ class TestGetJson(unittest.TestCase):
         ("http://holberton.io", {"payload": False})
     ])
     def test_get_json(self, test_url: str, test_payload: Mapping) -> None:
+        """
+        Tests that the get_json function behaves as expected with valid args
+        """
         with mock.patch("utils.requests") as requests_mock:
             get_return = mock.Mock()
             get_return.json.return_value = test_payload
