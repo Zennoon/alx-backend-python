@@ -109,15 +109,33 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             """Selects the proper payload"""
             base_url = "https://api.github.com/orgs/google"
             mock = Mock()
+            mock.json = Mock()
             if url == base_url:
                 mock.json.return_value = cls.org_payload
             elif url == base_url + "/repos":
                 mock.json.return_value = cls.repos_payload
             return mock
 
-        cls.get_patcher = patch("requests.get")
-        cls.get_patcher.side_effect = payload_side_effect
+        cls.get_patcher = patch("requests.get", side_effect=payload_side_effect)
         cls.get_patcher.start()
+
+    def test_public_repos(self):
+        """Integration testing for the public_repos method"""
+        client = GithubOrgClient("google")
+        self.assertEqual(
+            client.public_repos(),
+            self.expected_repos
+        )
+
+    def test_public_repos_with_license(self):
+        """
+        Integration testing for the public_repos method with licenses
+        """
+        client = GithubOrgClient("google")
+        self.assertEqual(
+            client.public_repos("apache-2.0"),
+            self.apache2_repos
+        )
 
     @classmethod
     def tearDownClass(cls) -> None:
