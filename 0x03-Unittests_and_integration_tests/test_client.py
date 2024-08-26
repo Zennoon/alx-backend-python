@@ -5,7 +5,6 @@ Contains:
 """
 import unittest
 from parameterized import parameterized
-from typing import Any
 from unittest.mock import patch
 from unittest.mock import MagicMock, PropertyMock as PM
 
