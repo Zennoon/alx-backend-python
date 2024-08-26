@@ -4,12 +4,13 @@ Contains:
     Testcases for the GithubOrgClient Class of the client module
 """
 import unittest
-from parameterized import parameterized
+from parameterized import parameterized, parameterized_class
 from typing import Dict
 from unittest.mock import patch
-from unittest.mock import MagicMock, PropertyMock
+from unittest.mock import MagicMock, Mock, PropertyMock
 
 from client import GithubOrgClient
+from fixtures import TEST_PAYLOAD
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -91,3 +92,33 @@ class TestGithubOrgClient(unittest.TestCase):
         """
         client = GithubOrgClient("NVIDIA")
         self.assertIs(client.has_license(repo, key), expected)
+
+
+@parameterized_class(
+    ("org_payload", "repos_payload", "expected_repos", "apache2_repos"),
+    [
+        tuple([fixture for fixture in TEST_PAYLOAD[0]])
+    ]
+)
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """Integration testing of the public_repo method"""
+    @classmethod
+    def setUpClass(cls) -> None:
+        """Defines code to be executed before any testing commences"""
+        def payload_side_effect(url):
+            """Selects the proper payload"""
+            base_url = "https://api.github.com/orgs/google"
+            mock = Mock()
+            if url == base_url:
+                mock.json.return_value = cls.org_payload
+            elif url == base_url + "/repos":
+                mock.json.return_value = cls.repos_payload
+            return mock
+
+        cls.get_patcher = patch("requests.get")
+        cls.get_patcher.side_effect = payload_side_effect
+        cls.get_patcher.start()
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls.get_patcher.stop()
