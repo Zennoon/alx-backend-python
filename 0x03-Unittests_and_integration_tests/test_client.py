@@ -6,7 +6,7 @@ Contains:
 import unittest
 from parameterized import parameterized
 from unittest.mock import patch
-from unittest.mock import MagicMock, PropertyMock as PM
+from unittest.mock import MagicMock, PropertyMock
 
 from client import GithubOrgClient
 
@@ -29,7 +29,8 @@ class TestGithubOrgClient(unittest.TestCase):
 
     def test_public_repos_url(self) -> None:
         """Tests the _public_repos_url property of the class"""
-        with patch.object(GithubOrgClient, "org", new_callable=PM) as mock_org:
+        with patch.object(GithubOrgClient, "org",
+                          new_callable=PropertyMock) as mock_org:
             mock_org.return_value = {"repos_url": None}
             client = GithubOrgClient("google")
             self.assertEqual(client._public_repos_url, None)
@@ -57,7 +58,7 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get_json.return_value = repos_json
         with patch(
                 "client.GithubOrgClient._public_repos_url",
-                new_callable=PM
+                new_callable=PropertyMock
                 ) as mock_pru:
             mock_pru.return_value = "some_url"
 
