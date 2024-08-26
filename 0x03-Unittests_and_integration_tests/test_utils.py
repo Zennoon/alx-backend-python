@@ -7,8 +7,9 @@ Contains:
     util function
 """
 import unittest
-import unittest.mock
 from parameterized import parameterized
+from unittest import mock
+from unittest.mock import patch
 
 from utils import access_nested_map, get_json, memoize
 
@@ -45,8 +46,8 @@ class TestGetJson(unittest.TestCase):
         ("http://holberton.io", {"payload": False})
     ])
     def test_get_json(self, test_url, test_payload):
-        with unittest.mock.patch("utils.requests") as requests_mock:
-            get_return = unittest.mock.Mock()
+        with patch("utils.requests") as requests_mock:
+            get_return = mock.Mock()
             get_return.json.return_value = test_payload
             requests_mock.get.return_value = get_return
             self.assertEqual(get_json(test_url), test_payload)
@@ -54,20 +55,23 @@ class TestGetJson(unittest.TestCase):
 
 
 class TestMemoize(unittest.TestCase):
-    """Testcases for the memoize decorator of the util class"""
+    """
+    Test the memoization decorator, memoize
+    """
     def test_memoize(self):
-        """Tests that the memoize decorator works as expected"""
+        """
+        Test that utils.memoize decorator works as intended
+        """
         class TestClass:
-            """Testing class"""
+
             def a_method(self):
                 return 42
 
             @memoize
             def a_property(self):
                 return self.a_method()
-        with unittest.mock.patch.object(TestClass, "a_method") as a_method:
-            test_object = TestClass()
-            test_object.a_property()
-            test_object.a_property()
-
-            a_method.assert_called_once()
+        with patch.object(TestClass, 'a_method') as mock_object:
+            test = TestClass()
+            test.a_property()
+            test.a_property()
+            mock_object.assert_called_once()
