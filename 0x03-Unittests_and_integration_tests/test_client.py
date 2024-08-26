@@ -33,3 +33,34 @@ class TestGithubOrgClient(unittest.TestCase):
             mock_org.return_value = {"repos_url": None}
             client = GithubOrgClient("google")
             self.assertEqual(client._public_repos_url, None)
+
+    @patch("client.get_json")
+    def test_public_repos(self, mock_get_json):
+        """Tests the public_repos method of the class"""
+        repos_json = [
+            {
+                "name": "Clipchart",
+                "license": {
+                    "key": "MIT"
+                }
+            },
+            {
+                "name": "Windows",
+                "license": {
+                    "key": "PRI"
+                }
+            },
+            {
+                "name": "Visual Studio Code"
+            }
+        ]
+        mock_get_json.return_value = repos_json
+        with patch.object(GithubOrgClient, "_public_repos_url", new_callable=PM) as mock_pru:
+            mock_pru.return_value = "some_url"
+
+            client = GithubOrgClient("Microsoft")
+            self.assertEqual(client.public_repos(), [repo["name"] 
+                                                     for repo in repos_json])
+
+            mock_get_json.assert_called_once()
+            mock_pru.assert_called_once()
