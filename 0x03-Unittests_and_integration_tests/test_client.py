@@ -5,6 +5,7 @@ Contains:
 """
 import unittest
 from parameterized import parameterized
+from typing import Dict
 from unittest.mock import patch
 from unittest.mock import MagicMock, PropertyMock
 
@@ -67,3 +68,26 @@ class TestGithubOrgClient(unittest.TestCase):
 
             mock_pru.assert_called_once()
         mock_get_json.assert_called_once()
+
+    @parameterized.expand([
+        (
+            {
+                "license": {"key": "my_license"}
+            },
+            "my_license",
+            True
+        ),
+        (
+            {
+                "license": {"key": "other_license"}
+            },
+            "my_license",
+            False
+        )
+    ])
+    def test_has_license(self, repo: Dict, key: str, expected: bool) -> None:
+        """
+        Tests that the has_license method of the class behaves as expected
+        """
+        client = GithubOrgClient("NVIDIA")
+        self.assertIs(client.has_license(repo, key), expected)
