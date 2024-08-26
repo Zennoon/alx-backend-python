@@ -7,11 +7,12 @@ Contains:
     util function
 """
 import unittest
-import requests
-from unittest.mock import patch
-from utils import access_nested_map, get_json, memoize
-from typing import Mapping, Sequence, Any
 from parameterized import parameterized
+from typing import Any, Mapping, Sequence, Tuple
+from unittest import mock
+from unittest.mock import patch
+
+from utils import access_nested_map, get_json, memoize
 
 
 class TestAccessNestedMap(unittest.TestCase):
@@ -21,7 +22,8 @@ class TestAccessNestedMap(unittest.TestCase):
         ({"a": {"b": 2}}, ("a",), {"b": 2}),
         ({"a": {"b": 2}}, ("a", "b"), 2)
     ])
-    def test_access_nested_map(self, nested_map, path, expected):
+    def test_access_nested_map(self, nested_map: Mapping,
+                               path: Tuple, expected: int) -> None:
         """First test for access_nested_map function"""
         self.assertEqual(access_nested_map(nested_map, path), expected)
 
@@ -29,7 +31,8 @@ class TestAccessNestedMap(unittest.TestCase):
         ({}, ("a",), 0),
         ({"a": 1}, ("a", "b"), 1)
     ])
-    def test_access_nested_map_exception(self, nested_map, path, idx):
+    def test_access_nested_map_exception(self, nested_map: Mapping,
+                                         path: Tuple, idx: int) -> None:
         """
         Tests that invalid arguments cause the function
         to raise an exception
@@ -45,9 +48,9 @@ class TestGetJson(unittest.TestCase):
         ("http://example.com", {"payload": True}),
         ("http://holberton.io", {"payload": False})
     ])
-    def test_get_json(self, test_url, test_payload):
-        with patch("utils.requests") as requests_mock:
-            get_return = unittest.mock.Mock()
+    def test_get_json(self, test_url: str, test_payload: Mapping) -> None:
+        with mock.patch("utils.requests") as requests_mock:
+            get_return = mock.Mock()
             get_return.json.return_value = test_payload
             requests_mock.get.return_value = get_return
             self.assertEqual(get_json(test_url), test_payload)
@@ -55,23 +58,20 @@ class TestGetJson(unittest.TestCase):
 
 
 class TestMemoize(unittest.TestCase):
-    """
-    Test the memoization decorator, memoize
-    """
-    def test_memoize(self):
-        """
-        Test that utils.memoize decorator works as intended
-        """
+    """Testcases for the memoize decorator of the util class"""
+    def test_memoize(self) -> None:
+        """Tests that the memoize decorator works as expected"""
         class TestClass:
-
-            def a_method(self):
+            """Testing class"""
+            def a_method(self) -> int:
                 return 42
 
             @memoize
-            def a_property(self):
+            def a_property(self) -> int:
                 return self.a_method()
-        with patch.object(TestClass, 'a_method') as mock_object:
-            test = TestClass()
-            test.a_property()
-            test.a_property()
-            mock_object.assert_called_once()
+        with patch.object(TestClass, "a_method") as a_method:
+            test_object = TestClass()
+            test_object.a_property()
+            test_object.a_property()
+
+            a_method.assert_called_once()
