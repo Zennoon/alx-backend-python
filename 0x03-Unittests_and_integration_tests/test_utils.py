@@ -6,6 +6,7 @@ Contains:
     TestAccessNestedMap - Parameterized unittests for the access_nested_map
     util function
 """
+import requests
 import unittest
 from parameterized import parameterized
 from typing import Any, Mapping, Sequence, Tuple
