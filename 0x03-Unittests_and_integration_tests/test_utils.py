@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 """
 Contains:
-    Classes
-    =======
-    TestAccessNestedMap - Parameterized unittests for the access_nested_map
-    util function
+    unittests for the functions of the util module
 """
 import requests
 import unittest
