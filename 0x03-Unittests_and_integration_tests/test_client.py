@@ -62,8 +62,7 @@ class TestGithubOrgClient(unittest.TestCase):
             mock_pru.return_value = "some_url"
 
             client = GithubOrgClient("Microsoft")
-            self.assertEqual(client.public_repos(), [repo["name"]
-                                                     for repo in repos_json])
+            self.assertEqual(client.public_repos("MIT"), ["Clipchart"])
 
             mock_get_json.assert_called_once()
             mock_pru.assert_called_once()
