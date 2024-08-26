@@ -5,6 +5,7 @@ Contains:
 """
 import unittest
 from parameterized import parameterized
+from typing import Any
 from unittest.mock import patch
 from unittest.mock import PropertyMock as PM
 
@@ -18,7 +19,7 @@ class TestGithubOrgClient(unittest.TestCase):
         ("abc",)
     ])
     @patch("client.get_json")
-    def test_org(self, org, mock_get_json):
+    def test_org(self, org: str, mock_get_json: Any) -> None:
         """
         Tests the org method of the class
         """
@@ -27,7 +28,7 @@ class TestGithubOrgClient(unittest.TestCase):
 
         mock_get_json.assert_called_once()
 
-    def test_public_repos_url(self):
+    def test_public_repos_url(self) -> None:
         """Tests the _public_repos_url property of the class"""
         with patch.object(GithubOrgClient, "org", new_callable=PM) as mock_org:
             mock_org.return_value = {"repos_url": None}
@@ -35,7 +36,7 @@ class TestGithubOrgClient(unittest.TestCase):
             self.assertEqual(client._public_repos_url, None)
 
     @patch("client.get_json")
-    def test_public_repos(self, mock_get_json):
+    def test_public_repos(self, mock_get_json: Any) -> None:
         """Tests the public_repos method of the class"""
         repos_json = [
             {
