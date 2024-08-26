@@ -58,9 +58,9 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get_json.return_value = repos_json
         method_name = "_public_repos_url"
         with patch(
-            "client.GithubOrgClient._public_repos_url",
-            new_callable=PM,
-            ) as mock_pru:
+                "client.GithubOrgClient._public_repos_url",
+                new_callable=PM
+                ) as mock_pru:
             mock_pru.return_value = "some_url"
 
             client = GithubOrgClient("Microsoft")
